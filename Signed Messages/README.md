@@ -25,9 +25,14 @@ Here’s the functionality we’ve identified:
 - login (without password)
 - sending private messages
 - sending public messages
+
+and the most interesting one:
+
 - **verifying** message’s RSA-2048 signature for a given author
 
-When registering, the service generates an RSA-2048 key pair for us.
+<img width="500" src="./screenshots/verify_page.png" alt="ffuf"/>
+
+It looks like this is the page we need to hack.
 
 After inspecting all available requests through `Burp Suite`, nothing useful turned up. No signatures or public keys in headers, cookies, query parameters, or POST bodies. So we need to dig deeper.
 
@@ -42,6 +47,8 @@ Bingo. Alongside the known endpoints, `ffuf` discovered a hidden one: `/debug`. 
 `/debug` page provides a very detailed explanation of the key generation process - and this becomes our main attack vector.
 
 <img src="./screenshots/debug.png" alt="debug"/>
+
+Now our goal is to recreate the RSA key from the shown seed.
 
 Let’s break it down.
 
